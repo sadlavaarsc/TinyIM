@@ -87,4 +87,20 @@ public class ChannelManager {
     public int onlineCount() {
         return userChannelMap.size();
     }
+
+    /**
+     * 向指定用户发送消息
+     *
+     * @param userId  用户ID
+     * @param payload 消息内容（JSON字符串）
+     * @return true-发送成功 false-发送失败
+     */
+    public boolean sendToUser(Long userId, String payload) {
+        Channel channel = getChannel(userId);
+        if (channel != null && channel.isActive()) {
+            channel.writeAndFlush(new io.netty.handler.codec.http.websocketx.TextWebSocketFrame(payload));
+            return true;
+        }
+        return false;
+    }
 }
